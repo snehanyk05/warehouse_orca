@@ -23,7 +23,10 @@ TB3_LEFT_TURN = 3
 TB3_TURN_AROUND = 4
 
 from math import pow, atan2, sqrt, cos, sin, atan, asin
-
+'''
+Description: Turtlebot instance, a description files for each robot. This is reponsible for assigning it tasks from 
+the warehouse_manager and pathplanning using global planners and collision avoidance. 
+'''
 class TurtleBot:
 
     #global all_agents_pose_dict

@@ -15,7 +15,10 @@ import time
 import os
 
 from math import pow, atan2, sqrt, cos, sin, atan, asin
-
+'''
+Description: Turtlebot instance, a description files for each robot. This is reponsible for assigning it tasks from 
+the warehouse_manager and pathplanning using global planners and collision avoidance. 
+'''
 class TurtleBot:
 
     #global all_agents_pose_dict
@@ -35,9 +38,7 @@ class TurtleBot:
         self.goal_publisher = rospy.Publisher('/'+self.agent_name+'/move_base_simple/goal', PoseStamped, queue_size=10)
 
 
-        # Publisher which will publish Pose to the topic '/turtleX/cmd_vel'.
-        # self.turtle_teleport = rospy.ServiceProxy(self.agent_name + '/teleport_absolute', TeleportAbsolute)
-
+        
         # Publisher which will publish to the topic '/common_information'
         self.publish_information = rospy.Publisher("/common_information", Information, queue_size=10)
 
@@ -413,33 +414,22 @@ class TurtleBot:
     def move2goal_rvo(self,x,y):
         self.start_time = time.time()
         
-        # print("In move to path")
-        # print(self.nav_path)
+       
         # Please, insert a number slightly greater than 0 (e.g. 0.01).
         distance_tolerance = 0.2
 
         # Setting the direction and velocity
-        # self.desired_heading = atan2(self.goal_pose.pose.pose.position.y - self.odom.pose.pose.position.y, self.goal_pose.pose.pose.position.x - self.odom.pose.pose.position.x)
-        # self.set_heading(self.desired_heading)
+       
         rospy.sleep(2)
         # for point in self.nav_path:
         if(len(self.nav_path.poses)>0):
-        # print("Pub 1,"+self.agent_name+" :"+str(self.desired_heading));
-        # print(self.odom.pose.pose.position)
+       
             i = 0
             poses = self.nav_path.poses
-            # for i in range(len(poses)):
-            print("Prev Goal")
-            print(poses[i])
-            print('Next Goal')
-            print(poses[i+1])
-                    # rospy.sleep(0.1)
-                    # self.desired_heading = atan2((poses[i+1]).pose.position.y - (poses[i]).pose.position.y, (poses[i+1]).pose.position.x - (poses[i]).pose.position.x)
             self.desired_heading = atan2((poses[i]).pose.position.y - self.odom.pose.pose.position.y, (poses[i]).pose.position.x - self.odom.pose.pose.position.x)
                     
             self.heading = self.desired_heading
-                    # print("Pub 1"+self.agent_name+" :"+str(self.heading))
-                    # print(self.odom.pose.pose.position)
+                    
             self.vel_msg = Twist()
             self.vel_msg.linear.x = 0.1
             self.vel_msg.angular.z = self.heading
@@ -451,48 +441,34 @@ class TurtleBot:
                         self.update_RVO(self.vel_msg.linear.x)
 
                         if(self.collision() == True):
-                            print("COLLLLLLISION")
-                            #print("Inside RVO. Should choose new velocity")
-                            #print("The new choosen velocity is : ")
-                            #self.heading = self.choose_new_velocity_VO()
+                        
                             self.heading = self.choose_new_velocity_RVO()
                             if (self.best_min == None):
-                                #self.vel_msg.linear.x = self.penalize(self.vel_msg.linear.x)
+                                
                                 print("#########################################")
                                 self.heading = self.prev_heading
-                                #self.vel_msg.linear.x = 0.1
+                                
                             self.set_heading(self.heading)
-                            #print(self.heading)
-                            #print("---")
-                            #self.heading = self.VO[]
-                            #self.set_heading(self.heading)
-                            #rospy.sleep(0.01)
+                            
                         else:
-                            # self.desired_heading = atan2((poses[i+1]).pose.position.y - (poses[i]).pose.position.y, (poses[i+1]).pose.position.x - (poses[i]).pose.position.x)
                             self.desired_heading = atan2((poses[i]).pose.position.y - self.odom.pose.pose.position.y, (poses[i]).pose.position.x - self.odom.pose.pose.position.x)
-                            print("POSE")
-                            print(poses[i])
+                          
                             if(self.in_RVO(self.desired_heading) == True):
-                                # print("2")
-                                #print("desired heading still inside. Continue prev heading")
-                                #self.vel_msg.linear.x = 0
-                                #self.heading = self.prev_heading
+                               
                                 self.heading = self.choose_new_velocity_RVO()
                             else:
-                                # print("3")
-                                self.heading = self.desired_heading
-                            # print("Pub 3.1"+self.agent_name+" , Pos:"+str(self.odom.pose.pose.position)+" , Heading:"+str(self.heading))    
+                                
+                                self.heading = self.desired_heading    
                             self.set_heading(self.heading) 
-                            # print("Pub 3.2"+self.agent_name+" , Pos:"+str(self.odom.pose.pose.position)+" , Heading:"+str(self.heading))   
+                              
                         self.vel_msg.angular.z = self.heading - self.theta;
-                            # print("3:"+str(self.heading))
-                            # exit(0)
+                           
                         self.velocity_publisher.publish(self.vel_msg)
                         # print("Pub 2");
                         self.publish_to_information_channel(self.agent_name)
                         self.prev_heading = self.heading
                         i += 1
-            # print("-----")
+            
 
         # Stopping the agent after the movement is over.
             if self.euclidean_distance(self.goal_pose) < distance_tolerance:
