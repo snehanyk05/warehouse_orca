@@ -21,7 +21,7 @@
         <param name="load_map" value="$(find warehouse_orca)/stage/AddverbMap.png"/>
     </node>
 </launch>    
-<!--   
+  
   <include file="$(find planner)/launch/rrt_planner.launch">
     <arg name="robot" value="robot_0"/>
   </include>
@@ -52,7 +52,7 @@
   </include><include file="$(find planner)/launch/rrt_planner.launch">
     <arg name="robot" value="robot_9"/>
   </include> 
-  <include file="$(find planner)/launch/rrt_planner.launch">
+  <!-- <include file="$(find planner)/launch/rrt_planner.launch">
     <arg name="robot" value="robot_10"/>
   </include>
    <include file="$(find planner)/launch/rrt_planner.launch">
