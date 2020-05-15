@@ -9,9 +9,13 @@ On terminal 2 - rosrun warehouse_manager warehouse_master
 
 #3
 On terminal 3 - roslaunch warehouse_orca turtlebot_stage_rrt.launch (In case of RRT)
+
 or
+
 On terminal 3 - roslaunch warehouse_orca turtlebot_stage_astar.launch (In case of RRT)
+
 or in case of Dynamic astar dont run this step (Just follow dynamic_gloabl_planner and death_star package instructions)
+
 #4
 On terminal 4 - cd into warehouse_orca/src and run
 python multi_process_agents.py
